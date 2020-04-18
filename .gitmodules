@@ -1,0 +1,3 @@
+[submodule "CryptoQuote"]
+	path = CryptoQuote
+	url = https://github.com/Desposyni/CryptoQuote
