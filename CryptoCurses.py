@@ -2,10 +2,7 @@
 
 import time
 import curses
-import string
-import random
-from urllib.request import urlopen
-import os.path
+import CryptoQuote
 
 
 def main(screen):
