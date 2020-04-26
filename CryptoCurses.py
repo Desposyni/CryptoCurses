@@ -11,7 +11,7 @@ def main(screen):
         screen.addstr(0, 0, '  [N]ew Quote  |  [O]pen  |  [A]nswer  |  [Q]uit  ', curses.A_STANDOUT)
         screen.refresh()
 
-    def draw_puzzle(cipher, page, quote, author):
+    def draw_puzzle(page, quote, author):
         screen.clear()
         draw_menu()
 
@@ -69,8 +69,8 @@ def main(screen):
     quote = ''
     author = ''
 
-    while (key := screen.getkey()) != 'q':
-        if key == 'o':
+    while (key := screen.getkey()) not in ('q', 'Q'):
+        if key in ('o', 'O'):
             screen.addstr(1, 0, "Enter a number between 1 - 42500: ")
             screen.refresh()
             curses.echo()
@@ -81,6 +81,7 @@ def main(screen):
                 draw_menu()
                 screen.addstr(2, 0, "Invalid Input")
                 screen.refresh()
+                quote = ''
             else:
                 screen.addstr(f'Trying to open page {page}')
                 screen.refresh()
@@ -88,13 +89,14 @@ def main(screen):
                 key = 'n'
             finally:
                 curses.noecho()
-        if key == 'n':
+
+        if key in ('n', 'N'):
             cipher = get_cipher()
             page, quote, author = get_quote(page)
             e_quote, e_author = map(lambda p: encipher(cipher, p), (quote, author))
-            draw_puzzle(cipher, page, e_quote, e_author)
+            draw_puzzle(page, e_quote, e_author)
             page = 0
-        elif key == 'a' and quote:
+        elif key in ('a', 'A') and quote:
             draw_answer(quote, author)
             page = 0
         screen.addstr(1, 0, f'You Pressed {key}')
