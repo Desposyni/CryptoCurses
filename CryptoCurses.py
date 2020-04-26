@@ -5,20 +5,100 @@ from CryptoQuote.CryptoQuote import *
 
 
 def main(screen):
-    cipher = get_cipher()
-    page, quote, author = get_quote()
+    curses.use_default_colors()
 
-    for k, v in sorted(cipher.items()):
-        screen.addstr(0, 0, f'{k}:{v}')
-        screen.addstr(1, 0, ' , ') if k not in ['M', 'Z'] else screen.addstr('\n')
-    screen.addstr(2,0, f'Height = {curses.LINES}, Width = {curses.COLS}')
-    screen.addstr(3, 0, f'http://www.quotationspage.com/quote/{page}.html')
-    screen.addstr(4, 0, f'{quote}')
-    screen.addstr(5, 0, f'{author:>{len(quote)}}')
-    screen.addstr(6, 0, f'{encipher(cipher, quote)}')
-    screen.addstr(7, 0, f'{encipher(cipher, author):>{len(quote)}}')
-    screen.refresh()
-    curses.napms(10000)
+    def draw_menu():
+        screen.addstr(0, 0, '  [N]ew Quote  |  [O]pen  |  [A]nswer  |  [Q]uit  ', curses.A_STANDOUT)
+        screen.refresh()
+
+    def draw_puzzle(cipher, page, quote, author):
+        screen.clear()
+        draw_menu()
+
+        words = []
+        y, x = screen.getmaxyx()
+        wrap = x if x < 80 else 80
+        line = 4
+        for word in quote.split():
+            if len(' '.join(words)) + len(word) < wrap:
+                words.append(word)
+            else:
+                screen.addstr(line, 0, ' '.join(words))
+                line += 3
+                words = [word]
+        else:
+            screen.addstr(line, 0, ' '.join(words))
+            line += 3
+            screen.addstr(line, 0, ' ' * ((wrap if wrap < len(quote) else len(quote)) - len(author)))
+            screen.addstr(author, curses.A_BOLD)
+            line += 2
+
+            curses.init_pair(1, curses.COLOR_BLUE, curses.COLOR_BLACK)
+            screen.attron(curses.color_pair(1))
+            screen.addstr(line, 0, f'http://www.quotationspage.com/quote/{page}.html', curses.A_UNDERLINE)
+            screen.attroff(curses.color_pair(1))
+        screen.refresh()
+
+    def draw_answer(quote, author):
+        words = []
+        y, x = screen.getmaxyx()
+        wrap = x if x < 80 else 80
+        line = 3
+        for word in quote.split():
+            if len(' '.join(words)) + len(word) < wrap:
+                words.append(word)
+            else:
+                screen.addstr(line, 0, ' '.join(words))
+                line += 3
+                words = [word]
+        else:
+            screen.addstr(line, 0, ' '.join(words))
+            line += 3
+            screen.addstr(line, 0, ' ' * ((wrap if wrap < len(quote) else len(quote)) - len(author)))
+            screen.addstr(author, curses.A_BOLD)
+        screen.refresh()
+
+    # how to print the cipher wrapped for curses
+    # for i, e in enumerate(sorted(cipher.items())):
+    #     k, v = e
+    #     screen.addstr(i // 13 + 4, i * 4 % (13 * 4), f'{k}:{v}')
+
+    draw_menu()
+    cipher = {}
+    page = 0
+    quote = ''
+    author = ''
+
+    while (key := screen.getkey()) != 'q':
+        if key == 'o':
+            screen.addstr(1, 0, "Enter a number between 1 - 42500: ")
+            screen.refresh()
+            curses.echo()
+            try:
+                page = int(screen.getstr(5))
+            except ValueError:
+                screen.clear()
+                draw_menu()
+                screen.addstr(2, 0, "Invalid Input")
+                screen.refresh()
+            else:
+                screen.addstr(f'Trying to open page {page}')
+                screen.refresh()
+                curses.napms(1000)
+                key = 'n'
+            finally:
+                curses.noecho()
+        if key == 'n':
+            cipher = get_cipher()
+            page, quote, author = get_quote(page)
+            e_quote, e_author = map(lambda p: encipher(cipher, p), (quote, author))
+            draw_puzzle(cipher, page, e_quote, e_author)
+            page = 0
+        elif key == 'a' and quote:
+            draw_answer(quote, author)
+            page = 0
+        screen.addstr(1, 0, f'You Pressed {key}')
+        screen.refresh()
 
 
 curses.wrapper(main)
