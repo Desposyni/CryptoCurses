@@ -2,6 +2,11 @@
 *
 
 # allow code
+! CryptoQuote/.gitignore
+! CryptoQuote/__init__.py
+! CryptoQuote/CryptoQuote.py
+! CryptoQuote/LICENSE
+! CryptoQuote/README.md
 ! .dockerignore
 ! .gitignore
 ! .gitmodules
