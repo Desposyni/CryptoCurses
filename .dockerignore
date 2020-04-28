@@ -1,8 +1,0 @@
-# ignore everything
-*
-
-# allow required files
-! .dockerignore
-! Dockerfile
-! CryptoCurses.py
-! /CryptoQuote/CryptoQuote.py

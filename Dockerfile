@@ -9,7 +9,7 @@ COPY ./CryptoQuote/CryptoQuote.py /home/cq/CryptoQuote/
 RUN chown -R cq:cq /home/cq/
 RUN chmod +x /home/cq/CryptoCurses.py
 
-RUN apt update && apt install -y openssh-server && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y openssh-server && rm -rf /var/lib/apt/lists/*
 
 RUN sed -i.bak 's/#PermitEmptyPasswords no/PermitEmptyPasswords yes/g' /etc/ssh/sshd_config
 RUN sed -i.bak 's/UsePAM yes/UsePAM no/g' /etc/ssh/sshd_config
