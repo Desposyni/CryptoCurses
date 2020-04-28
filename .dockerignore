@@ -1,0 +1,6 @@
+# ignore everything
+*
+
+# allow required files
+! CryptoCurses.py
+! CryptoQuote/CryptoQuote.py
