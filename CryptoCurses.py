@@ -64,6 +64,17 @@ def main(screen):
     #     screen.addstr(i // 13 + 4, i * 4 % (13 * 4), f'{k}:{v}')
 
     draw_menu()
+    screen.addstr(2, 0, "Welcome to CryptoQuote!")
+    screen.addstr(4, 0, "Press 'N' to get a random quote")
+    screen.addstr(5, 0, "          quote number will be displayed in a URL")
+    screen.addstr(5, 0, "Press 'O' to attempt to open a specific quote number")
+    screen.addstr(6, 0, "          If the quote number doesn't exist,")
+    screen.addstr(7, 0, "          a random quote will be chosen instead")
+    screen.addstr(8, 0, "Press 'A' to reveal the answer")
+    screen.addstr(9, 0, "Press 'Q' to exit the game")
+    screen.addstr(11, 0, "go to https://github.com/Desposyni/CryptoCurses")
+    screen.addstr(12, 0, "      for source code and to submit issues")
+
     cipher = {}
     page = 0
     quote = ''
